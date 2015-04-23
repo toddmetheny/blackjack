@@ -9,13 +9,33 @@ class Blackjack
     @dealer_hand = []
     @busted = false
     @dealer_busted = false
+    @@bankroll = 0
   end
 
-  # def start
-  #   initial_deal
-  # end
-
   def start
+    puts "Do you want to play for fun or do you want to gamble? (Enter: 'fun' or 'gamble')"
+    just_gamble = gets.chomp.downcase
+    if just_gamble == "fun"
+      @gambler = false
+      start_game
+    elsif just_gamble == "gamble"
+      @gambler = true
+      wager
+    else
+      puts "you didn't enter fun or gamble"
+      start
+    end
+  end
+
+  def wager
+    puts "How much would you like to wager? We'll keep track of your winnings."
+    puts "Please enter a dollar amount between 1 and 100"
+    @amount = gets.chomp.to_i
+    puts "Great, you've wagered $#{@amount.to_s}. Let's get started."
+    start_game
+  end
+
+  def start_game
     @player_card1 = deal_card()
     @dealer_downcard = deal_card()
     @player_card2 = deal_card()
@@ -145,6 +165,16 @@ class Blackjack
     pick_winner
   end
 
+  def results
+    if @@bankroll == 0
+      puts "You're even!"
+    elsif @@bankroll > 0
+      puts "You're up $#{@@bankroll.to_i}!"
+    else
+      puts "You're down $#{@@bankroll.to_i}!"
+    end
+  end
+
   def pick_winner
     puts "The player has " + player_total.to_s
 
@@ -152,8 +182,16 @@ class Blackjack
       puts "Dealer and player tie. It's a push."
     elsif(player_total > dealer_total && @busted == false) || (@busted == false && @dealer_busted == true)
       puts "Player wins " + player_total.to_s + " to " + dealer_total.to_s
+      if @gambler
+        @@bankroll += @amount
+        results
+      end
     else
       puts "Dealer wins " + dealer_total.to_s + " to " + player_total.to_s
+      if @gambler
+        @@bankroll -= @amount
+        results
+      end
     end
 
     play_again
