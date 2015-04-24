@@ -55,6 +55,14 @@ class Blackjack
     game_play
   end
 
+  def split
+    puts "You got #{name(@player_card1)} and #{name(@player_card2)}, which have the same value, would you like to split?"
+    yes_or_no = gets.chomp.downcase
+    if yes_or_no == "yes"
+      ####################
+    end
+  end
+
   def game_play
     puts "You have a " + name(@player_card1) + " and a " + name(@player_card2) +
     " for a total of " + player_total.to_s
@@ -65,6 +73,8 @@ class Blackjack
       unless (@dealer_upcard == 1 || @dealer_upcard >= 10) 
         puts "You win!"
       end
+    elsif value(@player_card1) == value(@player_card2)
+      split
     else
       puts "The dealer is showing " + name(@dealer_upcard)
       puts "Would you like to hit or stay? (reply 'hit' OR 'stay')"
