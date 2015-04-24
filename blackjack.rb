@@ -1,25 +1,3 @@
-class Bankroll
-  attr_accessor :amount
-  @@dollars_owed = []
-  def initialize(amount)
-    @amount = amount
-    @@dollars_owed << self
-  end
-
-  def self.total
-    @num = 0
-    @@dollars_owed.each do |d|
-      num += d.amount
-    end
-    @num
-    if @num > 0
-      puts "you're up #{@num} dollars"
-    else
-      puts "you owe #{@num} dollars"
-    end
-  end
-end
-
 class Blackjack
   attr_accessor :deck, :player_hand
   
