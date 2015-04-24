@@ -1,5 +1,29 @@
+class Bankroll
+  attr_accessor :amount
+  @@dollars_owed = []
+  def initialize(amount)
+    @amount = amount
+    @@dollars_owed << self
+  end
+
+  def self.total
+    @num = 0
+    @@dollars_owed.each do |d|
+      num += d.amount
+    end
+    @num
+    if @num > 0
+      puts "you're up #{@num} dollars"
+    else
+      puts "you owe #{@num} dollars"
+    end
+  end
+end
+
 class Blackjack
   attr_accessor :deck, :player_hand
+  
+  @@bankroll = 0
 
   def initialize
     suit = (1..13).to_a
@@ -9,7 +33,10 @@ class Blackjack
     @dealer_hand = []
     @busted = false
     @dealer_busted = false
-    @@bankroll = 0
+  end
+
+  def bankroll
+    @@bankroll
   end
 
   def start
@@ -28,7 +55,7 @@ class Blackjack
   end
 
   def wager
-    puts "How much would you like to wager? We'll keep track of your winnings."
+    puts "How much would you like to wager?"
     puts "Please enter a dollar amount between 1 and 100"
     @amount = gets.chomp.to_i
     puts "Great, you've wagered $#{@amount.to_s}. Let's get started."
@@ -56,7 +83,8 @@ class Blackjack
 
     if player_total == 21
       puts "You got blackjack!"
-      unless @dealer_upcard == 1 || @dealer_upcard >= 10
+      pick_winner
+      unless (@dealer_upcard == 1 || @dealer_upcard >= 10) 
         puts "You win!"
       end
     else
@@ -184,16 +212,25 @@ class Blackjack
       puts "Player wins " + player_total.to_s + " to " + dealer_total.to_s
       if @gambler
         @@bankroll += @amount
-        results
+        puts "you won #{@amount}"
+        if @@bankroll > 0
+          puts "you've won #{@@bankroll}"
+        else
+          puts "you've lost #{@@bankroll}"
+        end
       end
     else
       puts "Dealer wins " + dealer_total.to_s + " to " + player_total.to_s
       if @gambler
         @@bankroll -= @amount
-        results
+        puts "you lost #{@amount}"
+        if @@bankroll > 0
+          puts "you've won #{@@bankroll}"
+        else
+          puts "you've lost #{@@bankroll}"
+        end
       end
     end
-
     play_again
   end
 
