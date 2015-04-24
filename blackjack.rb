@@ -60,6 +60,12 @@ class Blackjack
     yes_or_no = gets.chomp.downcase
     if yes_or_no == "yes"
       ####################
+      @hand1 = [@player_card1]
+      @hand2 = [@player_card2]
+      new_card = deal_card()
+      @hand1 << new_card
+      another_new_card = deal_card()
+      @hand2 << another_new_card
     end
   end
 
