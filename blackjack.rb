@@ -16,12 +16,6 @@
 #   end
 # end
 
-# class DoubleDown < Blackjack
-#   def initialize
-
-#   end
-# end
-
 class Blackjack
   attr_accessor :deck, :player_hand
   
@@ -60,7 +54,12 @@ class Blackjack
     puts "How much would you like to wager?"
     puts "Please enter a dollar amount between 1 and 100"
     @amount = gets.chomp.to_i
-    puts "Great, you've wagered $#{@amount.to_s}. Let's get started."
+    if @amount.to_i > 100
+      puts "The max bet is 100."
+      wager
+    else
+      puts "Great, you've wagered $#{@amount.to_s}. Let's get started."
+    end
     start_game
   end
 
@@ -71,7 +70,6 @@ class Blackjack
     @dealer_upcard = deal_card()
 
     @player_hand << value(@player_card1)
-    
     @player_hand << value(@player_card2)
 
     @dealer_hand << value(@dealer_upcard)
@@ -180,14 +178,15 @@ class Blackjack
 
   def player_total(hand)
     # @player_hand.inject(:+)
+    p "hand: #{hand}"
     total = hand.inject(:+)
-    if total > 21 && hand.include?(11)
+    if total > 21 && @player_hand.include?(11)
       hand.delete(11)
       hand << 1
       p "ace_adjustment: #{hand}"
       total = hand.inject(:+)
     else 
-      total = hand.inject(:+)
+      total = @player_hand.inject(:+)
     end
     total
   end
@@ -204,7 +203,7 @@ class Blackjack
     while @answer.downcase != 'stay' && player_total(hand) < 21
       if @answer.downcase == 'hit'
         @another_card = deal_card
-        hand << @another_card
+        hand << value(@another_card)
         puts "You drew a " + name(@another_card)
         
         p player_total(hand)
@@ -312,7 +311,13 @@ class Blackjack
       puts "Thanks for playing!"
     end
   end
-end  
+end 
+
+class DoubleDown < Blackjack
+  def initialize(total)
+
+  end
+end 
 
 b = Blackjack.new
 b.start
